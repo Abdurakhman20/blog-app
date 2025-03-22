@@ -17,3 +17,5 @@
   - TypeScript
   - PostgreSQL
   - Prisma
+  - Docker
+  - Docker Compose
