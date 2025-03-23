@@ -31,7 +31,7 @@ model User {
 
 model Profile {
   id          Int     @id @default(autoincrement())
-  avatarUrl   String?
+  avatarUrl   String? @map("avatar_url")
   firstname   String?
   lastname    String?
   bio         String?
@@ -57,7 +57,7 @@ model Article {
   id        Int      @id @default(autoincrement())
   title     String
   content   String
-  isPublished Boolean @default(false)
+  isPublished Boolean @default(false) @map("is_published")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

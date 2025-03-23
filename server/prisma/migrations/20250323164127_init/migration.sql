@@ -1,52 +1,5 @@
-/*
-  Warnings:
-
-  - You are about to drop the `article` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `comment` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `profile` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `social_link` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `tag` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `user` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "_ArticleToTag" DROP CONSTRAINT "_ArticleToTag_A_fkey";
-
--- DropForeignKey
-ALTER TABLE "_ArticleToTag" DROP CONSTRAINT "_ArticleToTag_B_fkey";
-
--- DropForeignKey
-ALTER TABLE "article" DROP CONSTRAINT "article_author_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "comment" DROP CONSTRAINT "comment_article_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "comment" DROP CONSTRAINT "comment_author_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "profile" DROP CONSTRAINT "profile_user_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "social_link" DROP CONSTRAINT "social_link_profile_id_fkey";
-
--- DropTable
-DROP TABLE "article";
-
--- DropTable
-DROP TABLE "comment";
-
--- DropTable
-DROP TABLE "profile";
-
--- DropTable
-DROP TABLE "social_link";
-
--- DropTable
-DROP TABLE "tag";
-
--- DropTable
-DROP TABLE "user";
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -64,7 +17,7 @@ CREATE TABLE "users" (
 -- CreateTable
 CREATE TABLE "profiles" (
     "id" SERIAL NOT NULL,
-    "avatarUrl" TEXT,
+    "avatar_url" TEXT,
     "firstname" TEXT,
     "lastname" TEXT,
     "bio" TEXT,
@@ -88,7 +41,7 @@ CREATE TABLE "articles" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "isPublished" BOOLEAN NOT NULL DEFAULT false,
+    "is_published" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "author_id" INTEGER NOT NULL,
@@ -116,6 +69,14 @@ CREATE TABLE "tags" (
     CONSTRAINT "tags_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "_ArticleToTag" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+
+    CONSTRAINT "_ArticleToTag_AB_pkey" PRIMARY KEY ("A","B")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
@@ -127,6 +88,9 @@ CREATE UNIQUE INDEX "profiles_user_id_key" ON "profiles"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "tags_name_key" ON "tags"("name");
+
+-- CreateIndex
+CREATE INDEX "_ArticleToTag_B_index" ON "_ArticleToTag"("B");
 
 -- AddForeignKey
 ALTER TABLE "profiles" ADD CONSTRAINT "profiles_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
